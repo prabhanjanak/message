@@ -1,3 +1,4 @@
+import streamlit as st
 from twilio.rest import Client
 from datetime import datetime
 
@@ -7,8 +8,11 @@ auth_token = 'c37e8d12028881e255926a3367867046'  # Replace with your Twilio Auth
 twilio_phone_number = '+12283382526'  # Replace with your Twilio phone number
 destination_phone_number = '+918951568286'  # Replace with the recipient's phone number
 
-# Generate slot number and get current datetime
-slot_number = '123789'  # Replace this with the actual slot number
+# Create a Streamlit app
+st.title("Slot Booking App")
+
+# Get slot number and current datetime
+slot_number = st.text_input("Enter Slot Number")
 current_time = datetime.now().strftime('%H:%M:%S')
 current_date = datetime.now().strftime('%Y-%m-%d')
 
@@ -19,11 +23,10 @@ message_body = f"Your slot number {slot_number} has been booked on {current_time
 client = Client(account_sid, auth_token)
 
 # Send the message
-message = client.messages.create(
-    body=message_body,
-    from_=twilio_phone_number,
-    to=destination_phone_number
-)
-
-# Output message SID for verification
-print(f"Message Successfully Sent With SID: {message.sid}")
+if st.button("Book Slot"):
+    message = client.messages.create(
+        body=message_body,
+        from_=twilio_phone_number,
+        to=destination_phone_number
+    )
+    st.write(f"Message Successfully Sent With SID: {message.sid}")
